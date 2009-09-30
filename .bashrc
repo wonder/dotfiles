@@ -12,7 +12,7 @@ alias ls='ls --color=auto'
 alias ll='ls -l'
 alias la='ls -a'
 alias rm='rm -i'
-have tree && alias tree='tree -Chs'
+alias tree='tree -Chs'
 
 # enable bash completion in interactive shells
 if [ -f /etc/bash_completion ]; then
