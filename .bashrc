@@ -13,20 +13,16 @@ alias ll='ls -l'
 alias la='ls -a'
 alias rm='rm -i'
 alias tree='tree -Chs'
+alias grep='grep -n --color=auto'
 
 # enable bash completion in interactive shells
 if [ -f /etc/bash_completion ]; then
     . /etc/bash_completion
 fi
-
-# search packages with pacman and display colors
-pacsearch(){
-	echo -e "$(pacman -Ss $@ | sed \
-	-e 's#core/.*#\\033[1;31m&\\033[0;37m#g' \
-	-e 's#extra/.*#\\033[0;32m&\\033[0;37m#g' \
-	-e 's#community/.*#\\033[1;35m&\\033[0;37m#g' \
-	-e 's#^.*/.* [0-9].*#\\033[0;36m&\\033[0;37m#g' )"
+checkout(){
+	svn checkout -N "svn+ssh://$1.archlinux.org/srv/svn-packages"
 }
+
 #aur
 aurget(){
 	pkg=$@
@@ -34,21 +30,35 @@ aurget(){
 }
 #build in chroot
 build(){
-    sudo makechrootpkg -cr ~/arch/arch64
+    sudo makechrootpkg -cr /builds/arch64
     echo "****Starting namcap log****"
-    cat ~/arch/arch64/rw/pkgdest/namcap.log
+    cat "$(pwd)/namcap.log"
     echo "****End namcap log****"
 }
-build32(){
-    sudo linux32 makechrootpkg -cr ~/arch/arch32
+build_t(){
+    sudo makechrootpkg -cr /builds/arch64-testing
     echo "****Starting namcap log****"
-    cat ~/arch/arch32/rw/pkgdest/namcap.log
+    cat "$(pwd)/namcap.log"
+    echo "****End namcap log****"
+}
+
+build32_t(){
+    sudo linux32 makechrootpkg -cr /builds/arch32-testing
+    echo "****Starting namcap log****"
+    cat "$(pwd)/namcap.log"
+    echo "****End namcap log****"
+}
+
+build32(){
+    sudo linux32 makechrootpkg -cr /builds/arch32
+    echo "****Starting namcap log****"
+    cat "$(pwd)/namcap.log"
     echo "****End namcap log****"
 }
 update_chroots(){
     chroots="arch32 arch64 arch32-testing arch64-testing"
     for i in $chroots; do
 	echo "**************Updating $i*************"
-	sudo mkarchroot -u ~/arch/$i/root
+	sudo mkarchroot -u /builds/$i/root
     done
 }
