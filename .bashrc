@@ -1,10 +1,15 @@
 # Check for an interactive session
 [ -z "$PS1" ] && return
 
-PS1='\[\033[0;32m\]┌─[ \[\033[0m\033[0;32m\]\u\[\033[0m\] @ \[\033[0;36m\]\h\[\033[0m\033[0;32m\] ] - [ \[\033[0m\]\w\[\033[0;32m\] ]\n\[\033[0;32m\]└─[\[\033[0m\033[0;32m\]\$\[\033[0m\033[0;32m\]]>\[\033[0m\] '
+if [ $(whoami) = "root" ]; then
+    PS1='\[\033[0;31m\]┌─[ \[\033[0m\033[0;31m\]\u\[\033[0m\] @ \[\033[0;36m\]\h\[\033[0m\033[0;31m\] ] - [ \[\033[0m\]\w\[\033[0;31m\] ]\n\[\033[0;31m\]└─[\[\033[0m\033[0;31m\]\$\[\033[0m\033[0;31m\]]>\[\033[0m\] '
+else
+    PS1='\[\033[0;32m\]┌─[ \[\033[0m\033[0;32m\]\u\[\033[0m\] @ \[\033[0;36m\]\h\[\033[0m\033[0;32m\] ] - [ \[\033[0m\]\w\[\033[0;32m\] ]\n\[\033[0;32m\]└─[\[\033[0m\033[0;32m\]\$\[\033[0m\033[0;32m\]]>\[\033[0m\] '
+fi
 
 export SVN_EDITOR=vim
 export OOO_FORCE_DESKTOP=gnome
+
 
 shopt -s checkwinsize
 
@@ -13,7 +18,10 @@ alias ll='ls -l'
 alias la='ls -a'
 alias rm='rm -i'
 alias tree='tree -Chs'
-alias grep='grep -n --color=auto'
+alias grep='grep --color=auto'
+alias fgrep='fgrep --color=auto'
+alias egrep='egrep --color=auto'
+
 
 # enable bash completion in interactive shells
 if [ -f /etc/bash_completion ]; then
@@ -32,27 +40,27 @@ aurget(){
 build(){
     sudo makechrootpkg -cr /builds/arch64
     echo "****Starting namcap log****"
-    cat "$(pwd)/namcap.log"
+    cat "namcap.log"
     echo "****End namcap log****"
 }
 build_t(){
     sudo makechrootpkg -cr /builds/arch64-testing
     echo "****Starting namcap log****"
-    cat "$(pwd)/namcap.log"
+    cat "namcap.log"
     echo "****End namcap log****"
 }
 
 build32_t(){
     sudo linux32 makechrootpkg -cr /builds/arch32-testing
     echo "****Starting namcap log****"
-    cat "$(pwd)/namcap.log"
+    cat "namcap.log"
     echo "****End namcap log****"
 }
 
 build32(){
     sudo linux32 makechrootpkg -cr /builds/arch32
     echo "****Starting namcap log****"
-    cat "$(pwd)/namcap.log"
+    cat "namcap.log"
     echo "****End namcap log****"
 }
 update_chroots(){
