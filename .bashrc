@@ -70,3 +70,13 @@ update_chroots(){
 	sudo mkarchroot -u /builds/$i/root
     done
 }
+
+scan () {
+    pacman -Qlq $1 | xargs file | grep ELF | awk -F: '{print $1}' |
+    	while read elfobj;
+	    do readelf -d $elfobj | grep NEEDED | sed 's/\[//;s/\]//' | nl |
+		while read c1 c2 c3 c4 c5 c6; do echo $elfobj -- $c6;
+		done;
+	    done
+
+}
